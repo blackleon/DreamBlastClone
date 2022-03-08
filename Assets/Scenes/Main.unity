@@ -701,5 +701,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Count: 200
   BallPrefab: {fileID: -7487313562177512573, guid: 458f5cc06be40e642b679e9f500e7ac2, type: 3}
-  SpawnHeight: 15
+  SpawnHeight: 7.5
   SpawnInterval: 0.0125
