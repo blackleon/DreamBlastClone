@@ -21,6 +21,25 @@ public class SpawnController : MonoBehaviour
         Pool();
     }
     
+    private void Pool()
+    {
+        pooledBalls = new List<BallController>();
+        spawnedBalls = new List<BallController>();
+        
+        for (int i = 0; i < Count; i++)
+        {
+            BallController spawnedBall = InstantiateBall();
+            spawnedBall.gameObject.SetActive(false);
+            pooledBalls.Add(spawnedBall);
+        }
+    }
+    
+    private BallController InstantiateBall()
+    {
+        BallController ballPrefab = Instantiate(BallPrefab, transform);
+        return ballPrefab;
+    }
+    
     private void Start()
     {
         SpawnAvailableBalls();
@@ -39,19 +58,6 @@ public class SpawnController : MonoBehaviour
                 yield return new WaitForSeconds(SpawnInterval);
             }
             clickBlocked = false;
-        }
-    }
-    
-    private void Pool()
-    {
-        pooledBalls = new List<BallController>();
-        spawnedBalls = new List<BallController>();
-        
-        for (int i = 0; i < Count; i++)
-        {
-            BallController spawnedBall = InstantiateBall();
-            spawnedBall.gameObject.SetActive(false);
-            pooledBalls.Add(spawnedBall);
         }
     }
     
@@ -95,24 +101,6 @@ public class SpawnController : MonoBehaviour
         ball.gameObject.SetActive(true);
     }
     
-    private BallController InstantiateBall()
-    {
-        BallController ballPrefab = Instantiate(BallPrefab, transform);
-        return ballPrefab;
-    }
-    
-    public void PoolBall(BallController spawnedBall)
-    {
-        spawnedBalls.Remove(spawnedBall);
-        pooledBalls.Add(spawnedBall);
-        spawnedBall.gameObject.SetActive(false);
-    }
-    
-    public List<BallController> GetSpawnedBalls()
-    {
-        return spawnedBalls;
-    }
-    
     public void CheckScore(BallController clickedBall)
     {
         if(clickBlocked) return;
@@ -122,9 +110,25 @@ public class SpawnController : MonoBehaviour
         
         foreach (var ball in detectedBalls)
         {
-            ball.Pool();
+            PoolBall(ball);
         }
         
         SpawnAvailableBalls();
+    }
+    
+    private void PoolBall(BallController spawnedBall)
+    {
+        spawnedBalls.Remove(spawnedBall);
+        pooledBalls.Add(spawnedBall);
+        
+        spawnedBall.gameObject.SetActive(false);
+        
+        spawnedBall.transform.position = Vector3.zero;
+        spawnedBall.rig.velocity = Vector2.zero;
+    }
+    
+    public List<BallController> GetSpawnedBalls()
+    {
+        return spawnedBalls;
     }
 }
